@@ -1,6 +1,9 @@
-using LMSAppMVC.Implementation.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using LMSAppMVC.Interfaces.Services;
 using LMSAppMVC.LMSDbContext;
+using LMSAppMVC.Models.DTOs.User.Validation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IBookService, BookService>();
+//builder.Services.AddScoped<IBookService, BookService>();
+
+
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterMemberRequestValidator>();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
 // Add Database
 builder.Services.AddDbContext<LMSContext>(options =>
@@ -37,6 +45,10 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Book}/{action=CreateBook}/{id?}")
     .WithStaticAssets();
+
+var hasher = new PasswordHasher<object>();
+var passwordHash = hasher.HashPassword(null!, "Admin@001");
+Console.WriteLine($"PasswordHash {passwordHash}");
 
 
 app.Run();

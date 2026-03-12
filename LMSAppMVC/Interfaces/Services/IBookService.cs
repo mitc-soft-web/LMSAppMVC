@@ -1,5 +1,5 @@
-﻿using LMSAppMVC.Models;
-using LMSAppMVC.Models.DTOs;
+﻿using LMSAppMVC.Models.DTOs;
+using LMSAppMVC.Models.Entities;
 
 namespace LMSAppMVC.Interfaces.Services
 {

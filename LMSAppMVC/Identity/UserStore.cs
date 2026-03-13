@@ -50,7 +50,7 @@ namespace LMSAppMVC.Identity
             _context.Dispose();
         }
 
-        public async Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public async Task<User?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             normalizedEmail = normalizedEmail.ToLower();
             cancellationToken.ThrowIfCancellationRequested();
@@ -61,7 +61,7 @@ namespace LMSAppMVC.Identity
             return await _context.Set<User>().SingleOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail, cancellationToken);
         }
 
-        public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public async Task<User?> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(userId))
@@ -71,7 +71,7 @@ namespace LMSAppMVC.Identity
             return await _context.Set<User>().FindAsync(new object[] { Guid.Parse(userId) }, cancellationToken);
         }
 
-        public async Task<User> FindByNameAsync(string userName, CancellationToken cancellationToken)
+        public async Task<User?> FindByNameAsync(string userName, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(userName))
@@ -81,14 +81,14 @@ namespace LMSAppMVC.Identity
             return await _context.Set<User>().FirstOrDefaultAsync(u => u.Email == userName, cancellationToken);
         }
 
-        public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
+        public Task<string?> GetEmailAsync(User user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            return Task.FromResult(user.Email.ToLower());
+            return Task.FromResult<string?>(user.Email?.ToLower());
         }
 
         public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
@@ -102,34 +102,36 @@ namespace LMSAppMVC.Identity
             return Task.FromResult(true);
         }
 
-        public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
+        public Task<string?> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            return Task.FromResult(user.Email.ToLower());
+            return Task.FromResult<string?>(user.Email?.ToLower());
         }
 
-        public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
+        public Task<string?> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            return Task.FromResult(user.Email.ToLower());
+            return Task.FromResult<string?>(user.Email?.ToLower());
         }
 
-        public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
+        public Task<string?> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
             return Task.FromResult(user.HashPassword);
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
         }
 
         public Task<bool> GetPhoneNumberConfirmedAsync(User user, CancellationToken cancellationToken)
@@ -157,14 +159,14 @@ namespace LMSAppMVC.Identity
             return Task.FromResult(user.Id.ToString());
         }
 
-        public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
+        public Task<string?> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            return Task.FromResult(user.Email.ToLower());
+            return Task.FromResult<string?>(user.Email?.ToLower());
         }
 
         public async Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
@@ -174,9 +176,11 @@ namespace LMSAppMVC.Identity
                 .AsNoTracking()
                 .Where(u => u.Name == roleName)
                 .Select(u => u.User)
+                .Where(u => u != null) // Filter out nulls
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            return userRole;
+            // Use ! operator to assert non-null, safe due to filter above
+            return userRole!.Cast<User>().ToList();
         }
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
@@ -196,9 +200,13 @@ namespace LMSAppMVC.Identity
             {
                 throw new ArgumentNullException(nameof(user));
             }
+#pragma warning disable CA1862
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var isInRole = await _context.Set<Role>().Include(u => u.User)
                 .Where(u => u.Name.ToLower() == roleName.ToLower() && u.User.Id == user.Id)
                 .AnyAsync(cancellationToken);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CA1862
             return isInRole;
         }
 
@@ -207,14 +215,16 @@ namespace LMSAppMVC.Identity
             throw new ArgumentNullException();
         }
 
-        public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
+        public Task SetEmailAsync(User user, string? email, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            user.Email = email.ToLower();
+#pragma warning disable CS8601 // Possible null reference assignment.
+            user.Email = email?.ToLower();
+#pragma warning restore CS8601 // Possible null reference assignment.
             return Task.CompletedTask;
         }
 
@@ -228,7 +238,9 @@ namespace LMSAppMVC.Identity
             return Task.CompletedTask;
         }
 
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -239,7 +251,9 @@ namespace LMSAppMVC.Identity
             return Task.CompletedTask;
         }
 
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -250,13 +264,17 @@ namespace LMSAppMVC.Identity
             return Task.CompletedTask;
         }
 
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         {
             throw new NotImplementedException();
         }
 
 
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)

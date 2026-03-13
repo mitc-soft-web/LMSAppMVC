@@ -1,6 +1,8 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using LMSAppMVC.Identity;
+using LMSAppMVC.Implementation.Repositories;
+using LMSAppMVC.Interfaces.Repositories;
 using LMSAppMVC.Interfaces.Services;
 using LMSAppMVC.LMSDbContext;
 using LMSAppMVC.Models.DTOs.Auth.Validation;
@@ -22,6 +24,8 @@ builder.Services.Scan(scan => scan
     .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
         .AsImplementedInterfaces()
         .WithScopedLifetime());
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 

@@ -60,5 +60,11 @@ namespace LMSAppMVC.Implementation.Repositories
             _context.Update(entity);
             return entity;
         }
+
+        async Task<bool> IBaseRepository.Any<T>(Expression<Func<T, bool>> expression)
+        {
+            return await _context.Set<T>()
+               .AnyAsync(expression);
+        }
     }
 }

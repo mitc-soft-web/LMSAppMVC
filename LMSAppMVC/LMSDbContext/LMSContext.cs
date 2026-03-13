@@ -27,7 +27,7 @@ namespace LMSAppMVC.LMSDbContext
                 .HasForeignKey<Librarian>(l => l.UserId);
 
             modelBuilder.Entity<Librarian>()
-               .HasIndex(l => l.EmployeeNumber)
+               .HasIndex(l => l.LibrarianRegistrationCode)
                .IsUnique();
 
             modelBuilder.Entity<User>()
@@ -45,7 +45,7 @@ namespace LMSAppMVC.LMSDbContext
         {
             var adminUserId = new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52");
             var adminRoleId = new Guid("6e3d4978-dcb0-42ea-8c48-7f6209d4a871");
-            var employeeNumner = Guid.NewGuid().ToString().Substring(0, 5).Replace("-", "").ToUpper();
+            var librarianRegNumber = Guid.NewGuid().ToString().Substring(0, 5).Replace("-", "").ToUpper();
 
             var adminRole = new Role
             {
@@ -71,7 +71,7 @@ namespace LMSAppMVC.LMSDbContext
                 FullName = "LMS Admin",
                 Id = new Guid("a65c9e02-1f0b-4e57-b3d8-7b77b4a302be"),
                 UserId = adminUserId,
-                EmployeeNumber = employeeNumner
+                LibrarianRegistrationCode = librarianRegNumber
             };
 
             modelBuilder.Entity<Role>().HasData(adminRole);
@@ -112,6 +112,6 @@ namespace LMSAppMVC.LMSDbContext
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<Member> Members => Set<Member>();
-        public DbSet<EmployeeNumberGenerator> EmployeeNumberGenerators => Set<EmployeeNumberGenerator>();
+        public DbSet<LibrarianRegistrationCodeGenerator> EmployeeNumberGenerators => Set<LibrarianRegistrationCodeGenerator>();
     }
 }

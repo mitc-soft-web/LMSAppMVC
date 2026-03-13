@@ -1,28 +1,22 @@
 ﻿using FluentValidation;
-using LMSAppMVC.Models.DTOs.Auth;
 
 namespace LMSAppMVC.Models.DTOs.Auth.Validation
 {
-    public class RegisterMemberRequestValidator : AbstractValidator<RegisterMemberRequestModel>
+    public class RegisterLibrarianRequestValidator: AbstractValidator<RegisterLibrarianRequestModel>
     {
-        public RegisterMemberRequestValidator()
+        public RegisterLibrarianRequestValidator()
         {
             RuleFor(x => x.FullName)
-                .NotEmpty().WithMessage("Fullname name is required.")
-                .MaximumLength(100).WithMessage("Full name must not exceed 100 characters.");
+               .NotEmpty().WithMessage("Fullname name is required.")
+               .MaximumLength(100).WithMessage("Full name must not exceed 100 characters.");
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required.")
                 .EmailAddress().WithMessage("Email must be a valid email address.")
                 .Equal(x => x.Email.Trim()).WithMessage("Email cannot contain leading or trailing whitespace.");
 
-            RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("Phone number is required.")
-                .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Phone number must be a valid international phone number.");
-
-            RuleFor(x => x.Address)
-                .NotEmpty().WithMessage("Address is required");
-                
+            RuleFor(x => x.LibrarianRegistrationCode)
+                .NotEmpty().WithMessage("Employee number required");
 
 
             RuleFor(x => x.HashPassword)

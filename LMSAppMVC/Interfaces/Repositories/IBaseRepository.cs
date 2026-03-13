@@ -11,5 +11,6 @@ namespace LMSAppMVC.Interfaces.Repositories
         Task<T> Get<T>(Expression<Func<T, bool>> expression) where T : BaseEntity;
         Task<IReadOnlyList<T>> GetAll<T>() where T : BaseEntity;
         IQueryable<T> QueryWhere<T>(Expression<Func<T, bool>> expression) where T : BaseEntity;
+        Task<bool> Any<T>(Expression<Func<T, bool>> expression) where T: BaseEntity;
     }
 }

@@ -175,7 +175,7 @@ namespace LMSAppMVC.Identity
             var userRole = await _context.Set<Role>()
                 .AsNoTracking()
                 .Where(u => u.Name == roleName)
-                .Select(u => u.User)
+                .Select(u => u.Users)
                 .Where(u => u != null) // Filter out nulls
                 .ToListAsync(cancellationToken: cancellationToken);
 
@@ -202,9 +202,11 @@ namespace LMSAppMVC.Identity
             }
 #pragma warning disable CA1862
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            var isInRole = await _context.Set<Role>().Include(u => u.User)
-                .Where(u => u.Name.ToLower() == roleName.ToLower() && u.User.Id == user.Id)
-                .AnyAsync(cancellationToken);
+            var isInRole = await _context.Set<Role>()
+                    .AnyAsync(r => r.Name.ToLower() == roleName.ToLower() &&
+                   r.Users.Any(u => u.Id == user.Id),
+              cancellationToken);
+
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
 #pragma warning restore CA1862
             return isInRole;

@@ -9,26 +9,14 @@ namespace LMSAppMVC.Identity
         private readonly IPasswordHasher<User> _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         public string GetPasswordHash(string password, string salt = null!)
         {
-            var dummyUser = ReturnUser();
             if (string.IsNullOrEmpty(salt))
             {
-                return _passwordHasher.HashPassword(dummyUser, password);
+                return _passwordHasher.HashPassword(new User(), password);
             }
-            return _passwordHasher.HashPassword(dummyUser, $"{password}{salt}");
+            return _passwordHasher.HashPassword(new User(), $"{password}{salt}");
 
 
         }
 
-        private User ReturnUser()
-        {
-            var user = new User
-            {
-                Email = null!,
-                HashPassword = null!,
-                DateCreated = DateTime.UtcNow,
-                RoleId = Guid.Empty
-            };
-            return user;
-        }
     }
 }

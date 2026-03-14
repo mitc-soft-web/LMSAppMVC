@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSAppMVC.Migrations
 {
     [DbContext(typeof(LMSContext))]
-    [Migration("20260313160446_first")]
+    [Migration("20260314173325_first")]
     partial class first
     {
         /// <inheritdoc />
@@ -157,7 +157,7 @@ namespace LMSAppMVC.Migrations
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FullName = "LMS Admin",
-                            LibrarianRegistrationCode = "C05F5",
+                            LibrarianRegistrationCode = "BB12C",
                             UserId = new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52")
                         });
                 });
@@ -355,8 +355,7 @@ namespace LMSAppMVC.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("RoleId")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
 
@@ -397,8 +396,8 @@ namespace LMSAppMVC.Migrations
             modelBuilder.Entity("LMSAppMVC.Models.Entities.User", b =>
                 {
                     b.HasOne("LMSAppMVC.Models.Entities.Role", "Role")
-                        .WithOne("User")
-                        .HasForeignKey("LMSAppMVC.Models.Entities.User", "RoleId")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -407,7 +406,7 @@ namespace LMSAppMVC.Migrations
 
             modelBuilder.Entity("LMSAppMVC.Models.Entities.Role", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("LMSAppMVC.Models.Entities.User", b =>

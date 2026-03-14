@@ -36,8 +36,8 @@ namespace LMSAppMVC.LMSDbContext
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
-                .WithOne(r => r.User)
-                .HasForeignKey<User>(u => u.RoleId);
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId);
 
         }
 

@@ -1,4 +1,5 @@
 ﻿using LMSAppMVC.Contracts.Services;
+using LMSAppMVC.Implementation.Repositories;
 using LMSAppMVC.Interfaces.Repositories;
 using LMSAppMVC.Interfaces.Services;
 using LMSAppMVC.Models.DTOs;
@@ -6,6 +7,7 @@ using LMSAppMVC.Models.DTOs.Auth;
 using LMSAppMVC.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Security.Principal;
 
 namespace LMSAppMVC.Implementation.Services
@@ -139,10 +141,10 @@ namespace LMSAppMVC.Implementation.Services
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    _logger.LogError(ex, "Error creating doctor");
+                    _logger.LogError(ex, "Error creating librarian");
                     return new BaseResponse<bool>
                     {
-                        Message = "An error occurred while creating doctor: " + ex.Message,
+                        Message = "An error occurred while creating librarian: " + ex.Message,
                         Status = false
                     };
                 }
@@ -170,9 +172,18 @@ namespace LMSAppMVC.Implementation.Services
                 };
             }
 
+            //if(request.ConfirmPassword != request.HashPassword)
+            //{
+            //    return new BaseResponse<bool>
+            //    {
+            //        Message = "Confirm password must match the password",
+            //        Status = false,
+            //    };
+            //}
+
+
             // Hash password
             var passwordHash = _identityService.GetPasswordHash(request.HashPassword);
-
             var userMember = new User
             {
                 Email = request.Email,
@@ -181,7 +192,6 @@ namespace LMSAppMVC.Implementation.Services
                 DateCreated = DateTime.UtcNow,
 
             };
-
             var strategy = _unitOfWork.CreateExecutionStrategy();
 
             BaseResponse<bool> response = await strategy.ExecuteAsync(async () =>
@@ -223,16 +233,89 @@ namespace LMSAppMVC.Implementation.Services
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    _logger.LogError(ex, "Error creating doctor");
+                    _logger.LogError(ex, "Error creating member");
                     return new BaseResponse<bool>
                     {
-                        Message = "An error occurred while creating doctor: " + ex.Message,
+                        Message = "An error occurred while creating member: " + ex.Message,
                         Status = false
                     };
                 }
             });
             return response;
                 
+        }
+
+        public async Task<BaseResponse<LoginResponseModel>> LoginAsync(LoginRequestModel request)
+        {
+            var user = await _userRespository.GetUserByEmail(request.Email);
+            if (user is null)
+            {
+                _logger.LogError("Invalid credentials");
+                return new BaseResponse<LoginResponseModel>
+                {
+                    Message = "Invalid credentials",
+                    Status = false
+                };
+            }
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+            if (!isPasswordValid)
+            {
+                _logger.LogError("Invalid credentials");
+                return new BaseResponse<LoginResponseModel>
+                {
+                    Message = "Invalid credentials",
+                    Status = false
+                };
+            }
+            var userRole = await _userRespository.GetUserRole(user.Id);
+
+            var role = userRole?.Role?.Name;
+
+            if(role is null)
+            {
+                return new BaseResponse<LoginResponseModel>
+                {
+                    Message = "Role not found",
+                    Status = false
+                };
+            }
+
+            if (role == "Member")
+            {
+                return new BaseResponse<LoginResponseModel>
+                {
+                    Message = "Login successful",
+                    Status = true,
+                    Data = new LoginResponseModel
+                    {
+
+                        UserId = user.Id,
+                        MembershipNo = user?.Member?.MembershipNumber,
+                        Email = user.Email,
+                        Role = role,
+                        FullName = user.Member != null ? $"{user.Member?.FullName}" : string.Empty
+
+                    }
+                };
+            }
+
+            return new BaseResponse<LoginResponseModel>
+            {
+                Message = "Login successful",
+                Status = true,
+
+                Data = new LoginResponseModel
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    Role = role,
+                    FullName = user.Librarian != null ? $"{user.Librarian?.FullName}" : string.Empty,
+
+
+                }
+            };
+
+           
         }
 
         private string GenerateMembershipNumber()

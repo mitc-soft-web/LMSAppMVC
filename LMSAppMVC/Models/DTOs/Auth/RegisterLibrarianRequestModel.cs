@@ -2,10 +2,12 @@
 {
     public class RegisterLibrarianRequestModel
     {
-        public required string Email { get; set; }
-        public required string HashPassword { get; set; }
-        public required string ConfirmPassword { get; set; }
-        public required string FullName { get; set; }
-        public required string LibrarianRegistrationCode { get; set; }
+#pragma warning disable CS8618
+        public string Email { get; set; }
+        public string HashPassword { get; set; }
+        public string ConfirmPassword { get; set; }
+        public string FullName { get; set; }
+        public string LibrarianRegistrationCode { get; set; }
+#pragma warning restore CS8618
     }
 }

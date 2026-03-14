@@ -53,9 +53,9 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
   .AddCookie(config =>
   {
-      config.LoginPath = "/User/login";
-      config.Cookie.Name = "HMS";
-      config.LogoutPath = "/User/logout";
+      config.LoginPath = "/Auth/login";
+      config.Cookie.Name = "LMS";
+      config.LogoutPath = "/Auth/logout";
       config.ExpireTimeSpan = TimeSpan.FromMinutes(15);
       config.SlidingExpiration = true;
   });
@@ -73,13 +73,14 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Book}/{action=CreateBook}/{id?}")
+    pattern: "{controller=Auth}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 var hasher = new PasswordHasher<object>();

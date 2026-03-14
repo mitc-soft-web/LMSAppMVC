@@ -2,7 +2,7 @@
 {
     public class RegisterViewModel
     {
-        public required RegisterMemberRequestModel Member {get; set;}
-        public required RegisterLibrarianRequestModel Librarian {get; set;}
+        public RegisterMemberRequestModel Member {get; set;}
+        public RegisterLibrarianRequestModel Librarian {get; set;}
     }
 }

@@ -36,7 +36,9 @@ namespace LMSAppMVC.Models.DTOs.Auth.Validation
 
             RuleFor(x => x.ConfirmPassword)
                 .NotEmpty().WithMessage("Confirm password is required.")
-                .Equal(x => x.HashPassword).WithMessage("Confirm password must match the password.");
+                .Equal(x => x.HashPassword)
+                .When(x => x.HashPassword is not null)
+                .WithMessage("Confirm password must match the password.");
         }
     }
 }

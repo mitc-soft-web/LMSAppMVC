@@ -8,5 +8,6 @@ namespace LMSAppMVC.Interfaces.Services
         public Task<BaseResponse<bool>> RegisterMemberAsync(RegisterMemberRequestModel request);
         public Task<BaseResponse<bool>> RegisterLibrarianAsync(RegisterLibrarianRequestModel request);
         public Task<BaseResponse> DeleteMember(Guid memberId);
+        public Task<BaseResponse<LoginResponseModel>> LoginAsync(LoginRequestModel request);
     }
 }

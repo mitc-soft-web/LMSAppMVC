@@ -1,0 +1,167 @@
+﻿@{
+    Layout = null;
+}
+
+@model LMSAppMVC.Models.DTOs.Auth.LoginRequestModel
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background-image: url('/images/library-bg.png');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+    }
+
+    /* Dark overlay to improve readability */
+    .overlay {
+        background: rgba(0, 0, 0, 0.55);
+        height: 100vh;
+    }
+
+    /* Login card */
+    .login-card {
+        width: 420px;
+        border-radius: 16px;
+        backdrop-filter: blur(8px);
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login </title>
+    <link rel="stylesheet" href="~/styles/register.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+
+</head>
+
+<body>
+
+    <div class="overlay">
+
+        <div class="container vh-100 d-flex justify-content-center align-items-center">
+
+            <div class="card shadow-lg border-0 login-card">
+
+                <div class="card-body p-4">
+                    @if (ViewBag.Message != null)
+                    {
+                        <div id="auto-close-alert" class="alert alert-danger alert-dismissible fade show" role="alert"
+                             style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+                            @ViewBag.Message
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <script>
+                            setTimeout(function() {
+                                var alert = document.getElementById('auto-close-alert');
+                                if (alert) {
+                                    // Use Bootstrap's dismissal logic
+                                    var bsAlert = new bootstrap.Alert(alert);
+                                    bsAlert.close();
+                                }
+                            }, 3000); // 3 seconds
+                        </script>
+                    }
+                    
+
+                    <div class="text-center mb-4">
+
+                        <h3 class="fw-bold">Library Login</h3>
+                        <p class="text-muted small">
+                            Access your library account
+                        </p>
+
+                    </div>
+
+                    <form asp-action="Login" method="post">
+
+                        <div class="form-floating mb-3">
+
+                            <input asp-for="Email" class="form-control" placeholder="Email">
+
+                            <label>Email Address</label>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+
+                        </div>
+
+                        <div class="form-floating mb-3 position-relative">
+                            <input type="password" asp-for="Password" class="form-control pe-5" id="passwordInput" placeholder="Password" required>
+                            <label>Password</label>
+                            <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor: pointer; z-index: 10;" onclick="togglePassword('passwordInput', this)">
+                                <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                            </span>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <div class="form-check">
+
+                                <input asp-for="RememberMe" class="form-check-input">
+
+                                <label class="form-check-label">
+                                    Remember me
+                                </label>
+
+                            </div>
+
+                            <a href="#" class="small text-decoration-none">
+                                Forgot password?
+                            </a>
+
+                        </div>
+
+
+                        <button class="btn btn-primary w-100">
+                            Sign In
+                        </button>
+
+                    </form>
+
+                    <hr>
+
+                    <div class="text-center small">
+
+                        Don't have an account?
+                        <a asp-action="Register" class="fw-semibold text-decoration-none">
+                            Register
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+                function togglePassword(inputId, el) {
+            const passwordInput = document.getElementById(inputId);
+            const icon = el.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            }
+        }
+
+    </script>
+</body>
+</html>

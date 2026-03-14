@@ -4,11 +4,14 @@ namespace LMSAppMVC.Models.Entities
 {
     public class User : BaseEntity
     {
-        public required string Email { get; set; }
-        public required string HashPassword { get; set; }
+#pragma warning disable CS8618
+        public string Email { get; set; }
+        public  string HashPassword { get; set; }
         public Librarian? Librarian { get; set; }
         public Member? Member { get; set; }
-        public required Guid RoleId { get; set; }
+        public Guid RoleId { get; set; }
+#pragma warning restore CS8618
         public Role? Role { get; set; }
+
     }
 }

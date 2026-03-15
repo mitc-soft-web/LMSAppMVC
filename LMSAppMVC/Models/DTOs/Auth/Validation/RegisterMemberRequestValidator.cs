@@ -14,7 +14,8 @@ namespace LMSAppMVC.Models.DTOs.Auth.Validation
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required.")
                 .EmailAddress().WithMessage("Email must be a valid email address.")
-                .Equal(x => x.Email.Trim()).WithMessage("Email cannot contain leading or trailing whitespace.");
+                .Must(email => string.IsNullOrEmpty(email) || email == email.Trim())
+                .WithMessage("Email cannot contain leading or trailing whitespace.");
 
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("Phone number is required.")
@@ -35,10 +36,15 @@ namespace LMSAppMVC.Models.DTOs.Auth.Validation
                 .Matches(@"[\W_]").WithMessage("Password must contain at least one special character.");
 
             RuleFor(x => x.ConfirmPassword)
-                .NotEmpty().WithMessage("Confirm password is required.")
-                .Equal(x => x.HashPassword)
-                .When(x => x.HashPassword is not null)
-                .WithMessage("Confirm password must match the password.");
+                .NotEmpty()
+                .WithMessage("Confirm password is required.");
+
+            When(x => !string.IsNullOrEmpty(x.HashPassword), () =>
+            {
+                RuleFor(x => x.ConfirmPassword)
+                    .Equal(x => x.HashPassword)
+                    .WithMessage("Confirm password must match the password.");
+            });
         }
     }
 }

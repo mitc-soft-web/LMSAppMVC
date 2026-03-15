@@ -122,6 +122,11 @@ namespace LMSAppMVC.Implementation.Services
                     await _userRespository.Add<Librarian>(librarian);
                     var success = await _unitOfWork.SaveChangesAsync();
 
+                    invite.IsUsed = true;
+
+                    await _employeeNumberGenerator.Update<LibrarianRegistrationCodeGenerator>(invite);
+                    await _unitOfWork.SaveChangesAsync();
+
                     await transaction.CommitAsync();
 
                     return success > 0 ? new BaseResponse<bool>
@@ -291,9 +296,9 @@ namespace LMSAppMVC.Implementation.Services
 
                         UserId = user.Id,
                         MembershipNo = user?.Member?.MembershipNumber,
-                        Email = user.Email,
+                        Email = user != null ? user.Email : "",
                         Role = role,
-                        FullName = user.Member != null ? $"{user.Member?.FullName}" : string.Empty
+                        FullName = user?.Member != null ? $"{user.Member?.FullName}" : string.Empty
 
                     }
                 };

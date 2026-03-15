@@ -1,4 +1,5 @@
-﻿using LMSAppMVC.Interfaces.Repositories;
+﻿using LMSAppMVC.Contracts.MailingService;
+using LMSAppMVC.Interfaces.Repositories;
 using LMSAppMVC.Interfaces.Services;
 using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Auth;
@@ -7,16 +8,19 @@ using LMSAppMVC.Models.Entities;
 namespace LMSAppMVC.Implementation.Services
 {
     public class LibrarianRegistrationCodeService(ILibrarianRegistrationCodeRepository librarianRegistrationCode,
-        ILogger<LibrarianRegistrationCodeService> logger, IUnitOfWork unitOfWork) : ILibrarianRegistrationCodeService
+        ILogger<LibrarianRegistrationCodeService> logger, IMailService mailService,
+        IUnitOfWork unitOfWork) : ILibrarianRegistrationCodeService
     {
         private readonly ILibrarianRegistrationCodeRepository _librarianRegistrationCodeRepository = librarianRegistrationCode ?? throw new ArgumentNullException(nameof(librarianRegistrationCode));
-        private readonly ILogger<LibrarianRegistrationCodeService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));    
+        private readonly ILogger<LibrarianRegistrationCodeService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));   
+        private readonly IMailService _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
         private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         public async Task<BaseResponse<bool>> GenerateLibrarianRegistrationCodeAsync(GenerateLibrarianRegistratationCodeRequestModel request)
         {
 
             var librarianRegistrationCode = new LibrarianRegistrationCodeGenerator
             {
+                FullName = request.FullName,
                 Email = request.Email,
                 IsUsed = false,
                 Expiry = DateTime.UtcNow.AddDays(1),
@@ -36,11 +40,27 @@ namespace LMSAppMVC.Implementation.Services
                     Status = false
                 };
             }
-            _logger.LogInformation("Code generated successfully");
+
+            var sent = await _mailService.SendInvitationMail(
+                librarianRegistrationCode.Email,
+                librarianRegistrationCode.FullName,
+                librarianRegistrationCode.LibrarianRegistrationCode,
+                "Librarian");
+
+            if(!sent)
+            {
+                return new BaseResponse<bool>
+                {
+                    Message = "Email couldn't be sent",
+                    Status = false
+                };
+            }
+
+            _logger.LogInformation("Code generated and email sent successfully");
             return new BaseResponse<bool>
             {
-                Message = "Code saved successfully",
-                Status = false
+                Message = "Code generated and email sent successfully",
+                Status = true
             };
 
         }

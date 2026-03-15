@@ -26,6 +26,10 @@
         border-radius: 16px;
         backdrop-filter: blur(8px);
     }
+
+    .input-validation-error {
+        border-color: #dc3545;
+    }
 </style>
 
 <!DOCTYPE html>
@@ -92,12 +96,18 @@
 
                         </div>
 
-                        <div class="form-floating mb-3 position-relative">
-                            <input type="password" asp-for="Password" class="form-control pe-5" id="passwordInput" placeholder="Password" required>
-                            <label>Password</label>
-                            <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor: pointer; z-index: 10;" onclick="togglePassword('passwordInput', this)">
-                                <i class="bi bi-eye-slash" id="toggleIcon"></i>
-                            </span>
+                        <div class="mb-3">
+                            <div class="form-floating position-relative">
+                                @* Unique ID: confInput *@
+                                <input type="password" asp-for="Password" class="form-control pe-5" id="passwordInput" placeholder="Password">
+                                <label asp-for="Password">Password</label>
+
+                                <span class="position-absolute top-50 end-0 translate-middle-y me-3"
+                                      style="cursor: pointer; z-index: 10;"
+                                      onclick="togglePassword('passwordInput', this)">
+                                    <i class="bi bi-eye-slash"></i>
+                                </span>
+                            </div>
                             <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
 
@@ -148,20 +158,26 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.7.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+
     <script>
-                function togglePassword(inputId, el) {
+        function togglePassword(inputId, el) {
             const passwordInput = document.getElementById(inputId);
             const icon = el.querySelector('i');
 
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                icon.classList.replace('bi-eye-slash', 'bi-eye');
+                icon.classList.replace('bi-eye-slash','bi-eye');
             } else {
                 passwordInput.type = 'password';
-                icon.classList.replace('bi-eye', 'bi-eye-slash');
+                icon.classList.replace('bi-eye','bi-eye-slash');
             }
         }
-
     </script>
 </body>
 </html>

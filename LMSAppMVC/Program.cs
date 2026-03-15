@@ -1,12 +1,19 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using LMSAppMVC.Configuration;
+using LMSAppMVC.Contracts.MailingService;
+using LMSAppMVC.Contracts.Messaging;
 using LMSAppMVC.Identity;
+using LMSAppMVC.Implementation.MailingService;
 using LMSAppMVC.Implementation.Repositories;
 using LMSAppMVC.Interfaces.Repositories;
 using LMSAppMVC.Interfaces.Services;
+using LMSAppMVC.Interfaces.TemplateEngine;
 using LMSAppMVC.LMSDbContext;
+using LMSAppMVC.MailingSender;
 using LMSAppMVC.Models.DTOs.Auth.Validation;
 using LMSAppMVC.Models.Entities;
+using LMSAppMVC.TemplateEngine;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +34,9 @@ builder.Services.Scan(scan => scan
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+ builder.Services.AddScoped<IMailSender, MailSender>()
+.AddScoped<IRazorEngine, RazorEngine>();
+
 
 
 //builder.Services.AddScoped<IBookService, BookService>();
@@ -35,6 +45,9 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterMemberRequestValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
+
+// Add Email Configurations
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
 
 
 

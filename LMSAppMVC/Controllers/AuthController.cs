@@ -1,5 +1,6 @@
 ﻿using LMSAppMVC.Contracts.Services;
 using LMSAppMVC.Interfaces.Services;
+using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -7,16 +8,50 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace LMSAppMVC.Controllers
 {
-    public class AuthController(IUserService userService, IIdentityService identityService) : Controller
+    public class AuthController(IUserService userService, IIdentityService identityService,
+        ILibrarianRegistrationCodeService librarianRegistrationCode) : Controller
     {
         private readonly IUserService _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         private readonly IIdentityService _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+        private readonly ILibrarianRegistrationCodeService _librarianCodeService = librarianRegistrationCode ?? throw new ArgumentNullException(nameof(librarianRegistrationCode));
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult CodeSent()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult SendInvitationCode()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendInvitationCode(GenerateLibrarianRegistratationCodeRequestModel request)
+        {
+            if (!ModelState.IsValid)
+                return View(request);
+
+            var codeResponse = await _librarianCodeService.GenerateLibrarianRegistrationCodeAsync(request);
+            if (codeResponse.Status)
+            {
+                TempData["MaskedEmail"] = MaskEmail(request.Email);
+                return RedirectToAction("CodeSent");
+            }
+
+            ViewBag.Message = codeResponse.Message;
+
+            return View(request);
+
         }
 
         [HttpGet]
@@ -32,11 +67,17 @@ namespace LMSAppMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterMember([Bind(Prefix = "Member")] RegisterMemberRequestModel request)
         {
-            var viewModel = new RegisterViewModel { Member = request };
+            request ??= new RegisterMemberRequestModel();
+
+            var viewModel = new RegisterViewModel 
+            { 
+                Member = request,
+                Librarian = new RegisterLibrarianRequestModel()
+            };
+
             if (!ModelState.IsValid)
-            {
                 return View("Register", viewModel);
-            }
+
             var registerMember = await _userService.RegisterMemberAsync(request);
 
             if (registerMember.Status)
@@ -52,12 +93,17 @@ namespace LMSAppMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterLibrarian([Bind(Prefix = "Librarian")] RegisterLibrarianRequestModel request)
         {
-            var viewModel = new RegisterViewModel { Librarian = request };
-            if (!ModelState.IsValid)
-            {
+            request ??= new RegisterLibrarianRequestModel();
 
+            var viewModel = new RegisterViewModel 
+            { 
+                Librarian = request,
+                Member = new RegisterMemberRequestModel()
+            };
+
+            if (!ModelState.IsValid)
                 return View("Register", viewModel);
-            }
+
             var registerLibrarian = await _userService.RegisterLibrarianAsync(request);
 
             if (registerLibrarian.Status)
@@ -67,7 +113,7 @@ namespace LMSAppMVC.Controllers
             }
 
             ViewBag.Message = registerLibrarian.Message;
-            return View(viewModel);
+            return View("Register", viewModel);
       
         }
 
@@ -121,6 +167,19 @@ namespace LMSAppMVC.Controllers
                 return View(model);
             }
 
+        }
+
+        private string MaskEmail(string email)
+        {
+            var parts = email.Split('@');
+
+            var name = parts[0];
+            var domain = parts[1];
+
+            if (name.Length <= 4)
+                return $"{name[0]}****@{domain}";
+
+            return $"{name.Substring(0, 4)}****@{domain}";
         }
 
     }

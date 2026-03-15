@@ -7,9 +7,13 @@ namespace LMSAppMVC.Models.DTOs.Auth.Validation
         public GenerateLibrarianRegistratationCodeRequestValidator()
         {
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email is required.")
-                .EmailAddress().WithMessage("Email must be a valid email address.")
-                .Equal(x => x.Email.Trim()).WithMessage("Email cannot contain leading or trailing whitespace.");
+                .NotEmpty().WithMessage("Email is required")
+                .EmailAddress().WithMessage("Enter valid email address")
+                .Must(email => string.IsNullOrEmpty(email) || email == email.Trim())
+                .WithMessage("Email cannot contain leading or trailing whitespace.");
+
+            RuleFor(x => x.FullName)
+                .NotEmpty().WithMessage("Full name is required");
         }
     }
 }

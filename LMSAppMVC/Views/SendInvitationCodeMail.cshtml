@@ -1,0 +1,126 @@
+﻿@inject IConfiguration configuration
+@model LMSAppMVC.Messaging.Models.SendInvitation
+
+@{
+    Layout = null;
+    var librarianRegUrl = configuration.GetValue<string>("MITCLmsUrls:LibrarianRegistrationUrl");
+    // Ensure the link is clean
+    var proceedRegistrationLink = $"{librarianRegUrl}";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Invitation to MITC Library</title>
+</head>
+
+<body style="margin:0; padding:0; background:#f5f7fb; font-family: 'Segoe UI', Arial, sans-serif; color:#111827; line-height: 1.6;">
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fb; padding:40px 12px;">
+        <tr>
+            <td align="center">
+
+                <!-- Main container -->
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0"
+                       style="max-width:600px; width:100%; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.06);">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding:35px 26px; background:linear-gradient(135deg, #0f172a 0%, #1e40af 100%); text-align:center;">
+                            <!-- Logo -->
+                            <img src="cid:mitc_library_logo.png"
+                                 alt="MITC Library"
+                                 style="width:160px; margin-bottom: 15px; border:0;" />
+
+                            <div style="font-size:22px; font-weight:700; color:#ffffff; margin:0; letter-spacing: -0.02em;">
+                                You’re Invited! 🎉
+                            </div>
+
+                            <div style="font-size:14px; color:#bfdbfe; margin-top:8px; font-weight: 500;">
+                                Join the MITC E-Library Community
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding:40px 35px;">
+
+                            <p style="margin:0 0 16px 0; font-size:17px;">
+                                Hello <strong>@Model.Name</strong>, 👋
+                            </p>
+
+                            <p style="margin:0 0 20px 0; font-size:15px; color:#374151;">
+                                You have been formally invited to join the <strong>MITC Library</strong>.
+                                Your account is ready to be finalized for: <br>
+                                <span style="color:#1d4ed8; font-weight: 600;">@Model.Email</span>
+                            </p>
+
+                            <!-- Role and Code Section -->
+                            <table role="presentation" width="100%" style="margin-bottom: 25px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <div style="font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 8px;">Assigned Role</div>
+                                        <div style="font-size: 15px; color: #0f172a; font-weight: 600; margin-bottom: 15px;">@Model.Role</div>
+
+                                        <div style="font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-bottom: 8px;">Registration Code</div>
+                                        <div style="font-size: 18px; color: #1d4ed8; font-family: monospace; font-weight: 700; letter-spacing: 2px;">@Model.RegistrationCode</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin:0 0 25px 0; font-size:15px; color:#374151;">
+                                Please click the button below to complete your setup and begin loaning books.
+                            </p>
+
+                            <!-- Button -->
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="@proceedRegistrationLink"
+                                           style="display:inline-block; background:#2563eb; color:#ffffff; text-decoration:none;
+                                                  padding:16px 30px; border-radius:10px; font-weight:700; font-size:16px; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);">
+                                            Complete Registration
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Divider -->
+                            <div style="height:1px; background:#f1f5f9; margin:35px 0;"></div>
+
+                            <!-- Troubleshooting -->
+                            <p style="margin:0 0 10px 0; font-size:12px; color:#94a3b8;">
+                                If the button above doesn't work, copy and paste this URL into your browser:
+                            </p>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size:12px; color:#475569; word-break:break-all;">
+                                @proceedRegistrationLink
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding:30px 26px; background:#f8fafc; text-align:center; border-top: 1px solid #f1f5f9;">
+                            <p style="margin:0; font-size:13px; color:#475569; font-weight: 600;">
+                                MITC Library
+                            </p>
+                            <p style="margin:4px 0 15px 0; font-size:12px; color:#64748b;">
+                                Safe Access. Endless Discovery.
+                            </p>
+                            <p style="margin:0; font-size:11px; color:#94a3b8;">
+                                © @DateTime.UtcNow.Year MITC. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

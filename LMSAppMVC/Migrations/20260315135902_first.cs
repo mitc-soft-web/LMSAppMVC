@@ -83,6 +83,8 @@ namespace LMSAppMVC.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     LibrarianRegistrationCode = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    FullName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Expiry = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -234,7 +236,7 @@ namespace LMSAppMVC.Migrations
             migrationBuilder.InsertData(
                 table: "Librarians",
                 columns: new[] { "Id", "DateCreated", "DateModified", "FullName", "LibrarianRegistrationCode", "UserId" },
-                values: new object[] { new Guid("a65c9e02-1f0b-4e57-b3d8-7b77b4a302be"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LMS Admin", "BB12C", new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52") });
+                values: new object[] { new Guid("a65c9e02-1f0b-4e57-b3d8-7b77b4a302be"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LMS Admin", "CE602", new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Librarians_LibrarianRegistrationCode",

@@ -1,0 +1,36 @@
+﻿@{
+    Layout = null;
+    var email = TempData["MaskedEmail"];
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+
+    <div class="card shadow-lg border-0 text-center" style="width:420px;border-radius:15px">
+
+        <div class="card-body p-4">
+
+            <h4 class="fw-bold mb-3">Congratulations!</h4>
+
+            <p class="text-muted">
+                Librarian registration code sent to
+            </p>
+
+            <div class="alert alert-success fw-semibold">
+                @email
+            </div>
+
+            <p class="small text-muted">
+                Kindly reach out to the user for account completion before code expires
+            </p>
+
+            <a href="/Auth/SendInvitationCode" class="btn btn-primary w-100 mt-2">
+                Send another Code
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

@@ -8,7 +8,9 @@ namespace LMSAppMVC.Models.DTOs.Auth.Validation
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("Enter valid email address");
+                .EmailAddress().WithMessage("Enter valid email address")
+                .Must(email => string.IsNullOrEmpty(email) || email == email.Trim())
+                .WithMessage("Email cannot contain leading or trailing whitespace.");
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Password is required");

@@ -2,6 +2,7 @@
 using LMSAppMVC.Implementation.Repositories;
 using LMSAppMVC.Interfaces.Repositories;
 using LMSAppMVC.Interfaces.Services;
+using LMSAppMVC.Interfaces.Services.IDS;
 using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Auth;
 using LMSAppMVC.Models.Entities;
@@ -15,7 +16,8 @@ namespace LMSAppMVC.Implementation.Services
     public class UserService(IUserRespository userRespository, 
         ILibrarianRegistrationCodeRepository employeeGenerator, IRoleRepository roleRepository,
         UserManager<User> userManager, IIdentityService identityService, IUnitOfWork unitOfWork,
-        ILogger<UserService> logger) : IUserService
+        ILogger<UserService> logger, IIdsService idsService,
+        IHttpContextAccessor httpcontext) : IUserService
     {
         private readonly IUserRespository _userRespository = userRespository ?? throw new ArgumentNullException(nameof(userRespository));
         private readonly UserManager<User> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -24,6 +26,8 @@ namespace LMSAppMVC.Implementation.Services
         private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         private readonly IIdentityService _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
         private readonly ILogger<UserService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        private readonly IIdsService _idsService = idsService ?? throw new ArgumentNullException(nameof(idsService));
+        private readonly IHttpContextAccessor _httpContext = httpcontext ?? throw new ArgumentNullException(nameof(httpcontext));
         public Task<BaseResponse> DeleteMember(Guid memberId)
         {
             throw new NotImplementedException();
@@ -177,15 +181,6 @@ namespace LMSAppMVC.Implementation.Services
                 };
             }
 
-            //if(request.ConfirmPassword != request.HashPassword)
-            //{
-            //    return new BaseResponse<bool>
-            //    {
-            //        Message = "Confirm password must match the password",
-            //        Status = false,
-            //    };
-            //}
-
 
             // Hash password
             var passwordHash = _identityService.GetPasswordHash(request.HashPassword);
@@ -252,9 +247,14 @@ namespace LMSAppMVC.Implementation.Services
 
         public async Task<BaseResponse<LoginResponseModel>> LoginAsync(LoginRequestModel request)
         {
+            var ip = _httpContext?.HttpContext?.Connection.RemoteIpAddress?.ToString();
             var user = await _userRespository.GetUserByEmail(request.Email);
             if (user is null)
             {
+#pragma warning disable CS8604 // Possible null reference argument.
+                await _idsService.RegisterFailedAttemptAsync(ip);
+#pragma warning restore CS8604 // Possible null reference argument.
+
                 _logger.LogError("Invalid credentials");
                 return new BaseResponse<LoginResponseModel>
                 {
@@ -265,6 +265,7 @@ namespace LMSAppMVC.Implementation.Services
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
             if (!isPasswordValid)
             {
+                await _idsService.RegisterFailedAttemptAsync(ip);
                 _logger.LogError("Invalid credentials");
                 return new BaseResponse<LoginResponseModel>
                 {

@@ -1,5 +1,6 @@
 ﻿using LMSAppMVC.Contracts.Services;
 using LMSAppMVC.Interfaces.Services;
+using LMSAppMVC.Interfaces.Services.IDS;
 using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Auth;
 using Microsoft.AspNetCore.Authentication;
@@ -13,11 +14,13 @@ using System.Threading.Tasks;
 namespace LMSAppMVC.Controllers
 {
     public class AuthController(IUserService userService, IIdentityService identityService,
-        ILibrarianRegistrationCodeService librarianRegistrationCode) : Controller
+        ILibrarianRegistrationCodeService librarianRegistrationCode, 
+        IIdsService idsService) : Controller
     {
         private readonly IUserService _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         private readonly IIdentityService _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
         private readonly ILibrarianRegistrationCodeService _librarianCodeService = librarianRegistrationCode ?? throw new ArgumentNullException(nameof(librarianRegistrationCode));
+        private readonly IIdsService _idsService = idsService ?? throw new ArgumentNullException(nameof(idsService));
         public IActionResult Index()
         {
             return View();
@@ -117,9 +120,14 @@ namespace LMSAppMVC.Controllers
       
         }
 
-
         [HttpGet]
         public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult LoginBlocked()
         {
             return View();
         }
@@ -131,10 +139,23 @@ namespace LMSAppMVC.Controllers
             {
                 return View(model);
             }
+
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            //var blockCheck = await _idsService.CheckLoginAttemptAsync(ip);
+            //if (blockCheck.IsBlocked)
+            //{
+            //    ViewBag.RemainingSeconds = blockCheck.RemainingSeconds;
+            //    return View("LoginBlocked");
+                
+            //}
+
             var loginResponse = await _userService.LoginAsync(model);
             var checkRole = "";
             if (loginResponse.Status)
             {
+#pragma warning disable CS8604 // Possible null reference argument.
+                await _idsService.ResetLoginAttemptsAsync(ip);
+#pragma warning restore CS8604 // Possible null reference argument.
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, loginResponse.Data.FullName),
@@ -143,6 +164,7 @@ namespace LMSAppMVC.Controllers
                      new Claim(ClaimTypes.Role, loginResponse.Data.Role),
 
                 };
+
 
                 checkRole = loginResponse.Data.Role;
 

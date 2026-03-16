@@ -37,6 +37,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
  builder.Services.AddScoped<IMailSender, MailSender>()
 .AddScoped<IRazorEngine, RazorEngine>();
 
+builder.Services.AddHttpContextAccessor();
+
 
 
 //builder.Services.AddScoped<IBookService, BookService>();
@@ -95,10 +97,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Auth}/{action=Login}/{id?}")
     .WithStaticAssets();
-
-var hasher = new PasswordHasher<object>();
-var passwordHash = hasher.HashPassword(null!, "Admin@001");
-Console.WriteLine($"PasswordHash {passwordHash}");
 
 
 app.Run();

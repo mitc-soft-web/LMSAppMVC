@@ -112,6 +112,7 @@ namespace LMSAppMVC.LMSDbContext
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<Member> Members => Set<Member>();
+        public DbSet<FailedLoginAttempts> FailedLoginAttempts => Set<FailedLoginAttempts>();
         public DbSet<LibrarianRegistrationCodeGenerator> EmployeeNumberGenerators => Set<LibrarianRegistrationCodeGenerator>();
     }
 }

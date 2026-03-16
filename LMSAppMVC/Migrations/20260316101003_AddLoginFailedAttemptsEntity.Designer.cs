@@ -4,6 +4,7 @@ using LMSAppMVC.LMSDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMSAppMVC.Migrations
 {
     [DbContext(typeof(LMSContext))]
-    partial class LMSContextModelSnapshot : ModelSnapshot
+    [Migration("20260316101003_AddLoginFailedAttemptsEntity")]
+    partial class AddLoginFailedAttemptsEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,20 +41,12 @@ namespace LMSAppMVC.Migrations
                     b.Property<DateTime>("DateModified")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -189,7 +184,7 @@ namespace LMSAppMVC.Migrations
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FullName = "LMS Admin",
-                            LibrarianRegistrationCode = "7C312",
+                            LibrarianRegistrationCode = "6D814",
                             UserId = new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52")
                         });
                 });
@@ -235,13 +230,16 @@ namespace LMSAppMVC.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime>("ApprovedDate")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<Guid>("BookId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("BorrowDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DateModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DueDate")

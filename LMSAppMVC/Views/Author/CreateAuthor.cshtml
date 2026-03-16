@@ -1,0 +1,160 @@
+﻿@using LMSAppMVC.Contracts.Enums
+@model LMSAppMVC.Models.DTOs.Author.CreateAuthorRequestModel
+
+@{
+    Layout = "_LibrarianLayout";
+}
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background-image: url('/images/library-bg.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* Added to keep bg stable when scrolling */
+        min-height: 100vh;
+    }
+
+    /* Dark overlay */
+    .overlay {
+        background: rgba(0, 0, 0, 0.55);
+        min-height: 100vh; /* Changed to min-height for mobile scrolling */
+        display: flex;
+        align-items: center;
+        padding: 20px 0;
+    }
+
+    /* Card styling */
+    .register-card {
+        width: 100%; /* Responsive base */
+        max-width: 500px; /* Your original size on desktop */
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+    }
+
+    .input-validation-error {
+        border-color: #dc3545;
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Author </title>
+    <link rel="stylesheet" href="~/styles/register.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+
+</head>
+
+<body>
+
+    <div class="overlay">
+
+        <div class="container d-flex justify-content-center align-items-center">
+
+            <div class="card shadow-lg border-0 register-card">
+
+                <div class="card-body p-4">
+                    @if (ViewBag.Message != null)
+                    {
+                        @* Removed position:fixed so it is responsive and visible inside the card *@
+                        <div id="auto-close-alert" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                            @ViewBag.Message
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <script>
+                            setTimeout(function() {
+                                var alertElem = document.getElementById('auto-close-alert');
+                                if (alertElem) {
+                                    var bsAlert = new bootstrap.Alert(alertElem);
+                                    bsAlert.close();
+                                }
+                            }, 5000);
+                        </script>
+                    }
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <div class="tab-content">
+
+                        <!-- AUTHOR FORM -->
+                        <div class="tab-pane fade show active" id="member">
+
+                            <form method="post" asp-action="CreateAuthor" asp-controller="Author">
+                                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" asp-for="FullName" class="form-control" placeholder="Full Name"
+                                           >
+                                    <label>Full Name</label>
+                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="email" asp-for="Email" class="form-control" placeholder="Email" >
+                                    <label>Email</label>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="tel" asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" >
+                                    <label>Phone Number</label>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <select asp-for="Gender" class="form-select" id="genderSelect" asp-items="@Html.GetEnumSelectList(typeof(Gender))">
+                                        <option value="" selected disabled>Select Gender</option>
+                                    </select>
+                                    <label for="genderSelect">Gender</label>
+                                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                                </div>
+
+
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" asp-for="Country" class="form-control" placeholder="Country">
+                                    <label>Country</label>
+                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                </div>
+
+                                <button class="btn btn-primary w-100">
+                                    Add Author
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.7.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

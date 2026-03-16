@@ -146,7 +146,16 @@ namespace LMSAppMVC.Identity
 
         public async Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            throw new ArgumentNullException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var roles = await _context.Set<Role>()
+                .Where(u => u.Users.Any(u => u.Id == user.Id))
+                .Select(r => r.Name)
+                .ToListAsync(cancellationToken: cancellationToken);
+            return roles;
         }
 
         public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)

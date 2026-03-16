@@ -1,0 +1,101 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    body {
+        background-image: url('/images/library-bg.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .overlay {
+        background: rgba(0,0,0,0.55);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .lock-card {
+        max-width: 420px;
+        width: 100%;
+        border-radius: 18px;
+        backdrop-filter: blur(12px);
+    }
+
+    .countdown-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #fff3cd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: bold;
+        color: #856404;
+        margin: auto;
+    }
+</style>
+
+<div class="overlay">
+
+    <div class="card shadow-lg border-0 lock-card text-center p-4">
+
+        <div class="card-body">
+
+            <i class="bi bi-shield-lock-fill text-warning" style="font-size:50px;"></i>
+
+            <h4 class="fw-bold mt-3">
+                Login Temporarily Locked
+            </h4>
+
+            <p class="text-muted mb-4">
+                Too many failed login attempts were detected from your IP address.
+            </p>
+
+            <div class="countdown-circle mb-3">
+                <span id="countdown"></span>
+            </div>
+
+            <p class="small text-muted">
+                Please wait while we protect your account.
+                You will be redirected to login automatically.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let seconds = @ViewBag.RemainingSeconds;
+
+    const countdown = document.getElementById("countdown");
+
+    function updateTimer(){
+
+        let minutes = Math.floor(seconds / 60);
+        let remaining = seconds % 60;
+
+        countdown.innerText =
+            minutes + ":" + (remaining < 10 ? "0" : "") + remaining;
+
+        if(seconds <= 0)
+        {
+            window.location.href = "/Auth/Login";
+        }
+
+        seconds--;
+    }
+
+    setInterval(updateTimer, 1000);
+
+    updateTimer();
+
+</script>

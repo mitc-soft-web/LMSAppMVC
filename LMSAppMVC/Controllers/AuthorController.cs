@@ -3,6 +3,7 @@ using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Author;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LMSAppMVC.Controllers
@@ -15,6 +16,11 @@ namespace LMSAppMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var name = User?.FindFirst(ClaimTypes.Name)?.Value;
+            var startName = name?.Substring(0, 1).ToUpper();
+            Console.WriteLine("NAME: " + startName);
+            ViewBag.NameAvatar = startName;
+
             var authorsResponse = await _authorService.GetAllAuthorsAsync();
 
             if (authorsResponse.Status)

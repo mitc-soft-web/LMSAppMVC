@@ -1,18 +1,12 @@
-﻿using LMSAppMVC.Contracts.Entities;
-
-namespace LMSAppMVC.Models.Entities
+﻿namespace LMSAppMVC.Models.DTOs.Book
 {
-    public class Book : BaseEntity
+    public class AddBookRequestModel
     {
         public required string Title { get; set; }
         public required Guid AuthorId { get; set; }
-        public Author? Author { get; set; }
         public required Guid CategoryId { get; set; }
-        public Category? Category { get; set; }
         public required string ISBN { get; set; }
         public required int PublishedYear { get; set; }
         public required int TotalCopies { get; set; }
-        public required int AvailableCopies { get; set; }
-
     }
 }

@@ -4,7 +4,7 @@ using LMSAppMVC.Contracts.Messaging;
 using LMSAppMVC.Exceptions.Messaging;
 using LMSAppMVC.Extensions;
 
-namespace LMSAppMVC.MailingSender
+namespace LMSAppMVC.Messaging
 {
     public class MailSender(IConfiguration configuration, IWebHostEnvironment env,
         ILogger<MailSender> logger) : IMailSender

@@ -1,8 +1,7 @@
-﻿@using LMSAppMVC.Contracts.Enums
-@model LMSAppMVC.Models.DTOs.Author.CreateAuthorRequestModel
+﻿@model LMSAppMVC.Models.Entities.Category
 
 @{
-    Layout = "_LibrarianLayout";
+    Layout = null;
 }
 
 
@@ -46,7 +45,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Author </title>
+    <title>Add Category </title>
     <link rel="stylesheet" href="~/styles/register.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net">
 
@@ -90,58 +89,34 @@
 
                     <div class="tab-content">
 
-                        <!-- AUTHOR FORM -->
+                        <!-- CATEGORY FORM -->
                         <div class="tab-pane fade show active" id="member">
 
                             <div class="text-center mb-4">
 
-                                <h3 class="fw-bold">Add Author</h3>
+                                <h3 class="fw-bold">Add Category</h3>
                                 <p class="text-muted small">
                                     Access your library account
                                 </p>
 
                             </div>
 
-                            <form method="post" asp-action="CreateAuthor" asp-controller="Author">
-                                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                            <form method="post" asp-action="AddCategory" asp-controller="Category">
 
                                 <div class="form-floating mb-3">
-                                    <input type="text" asp-for="FullName" class="form-control" placeholder="Full Name"
+                                    <input type="text" asp-for="Name" class="form-control" required placeholder="Category Name"
                                            >
-                                    <label>Full Name</label>
-                                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                                    <label>Name</label>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
                                 </div>
 
                                 <div class="form-floating mb-3">
-                                    <input type="email" asp-for="Email" class="form-control" placeholder="Email" >
-                                    <label>Email</label>
-                                    <span asp-validation-for="Email" class="text-danger small"></span>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <input type="tel" asp-for="PhoneNumber" class="form-control" placeholder="Phone Number" >
-                                    <label>Phone Number</label>
-                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
-                                </div>
-
-                                <div class="form-floating mb-3">
-                                    <select asp-for="Gender" class="form-select" id="genderSelect" asp-items="@Html.GetEnumSelectList(typeof(Gender))">
-                                        <option value="" selected disabled>Select Gender</option>
-                                    </select>
-                                    <label for="genderSelect">Gender</label>
-                                    <span asp-validation-for="Gender" class="text-danger small"></span>
-                                </div>
-
-
-
-                                <div class="form-floating mb-3">
-                                    <input type="text" asp-for="Country" class="form-control" placeholder="Country">
-                                    <label>Country</label>
-                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                    <input type="text" asp-for="Description" class="form-control" placeholder="Description">
+                                    <label>Description</label>
                                 </div>
 
                                 <button class="btn btn-primary w-100">
-                                    Add Author
+                                    Add Category
                                 </button>
 
                             </form>

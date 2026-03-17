@@ -10,7 +10,7 @@ using LMSAppMVC.Interfaces.Repositories;
 using LMSAppMVC.Interfaces.Services;
 using LMSAppMVC.Interfaces.TemplateEngine;
 using LMSAppMVC.LMSDbContext;
-using LMSAppMVC.MailingSender;
+using LMSAppMVC.Messaging;
 using LMSAppMVC.Models.DTOs.Auth.Validation;
 using LMSAppMVC.Models.Entities;
 using LMSAppMVC.TemplateEngine;

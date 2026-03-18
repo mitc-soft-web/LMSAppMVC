@@ -17,7 +17,8 @@ namespace LMSAppMVC.Models.DTOs.Auth
         public required string Email { get; set; }
         public required string Role { get; set; }
 
-        public string? MembershipNo { get; set; }
+        public Guid MemberId { get; set; }
+        public Guid LibrarianId { get; set; }
         public LibrarianDto? Librarian { get; set; }
         public MemberDto? Member { get; set; }
         

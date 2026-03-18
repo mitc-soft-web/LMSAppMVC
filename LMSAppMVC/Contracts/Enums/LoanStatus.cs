@@ -4,6 +4,7 @@
     {
         Approved = 1,
         Rejected,
-        Pending
+        Pending,
+        Returned
     }
 }

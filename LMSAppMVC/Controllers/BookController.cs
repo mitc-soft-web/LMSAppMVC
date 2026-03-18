@@ -54,6 +54,47 @@ namespace LMSAppMVC.Controllers
             return View(books);
         }
 
+        [Authorize(Roles = "Member")]
+        [HttpGet]
+        public async Task<IActionResult> BookDetailsForMember(Guid id)
+        {
+            var name = User?.FindFirst(ClaimTypes.Name)?.Value;
+            var startName = name?.Substring(0, 1).ToUpper();
+            Console.WriteLine("NAME: " + startName);
+            ViewBag.NameAvatar = startName;
+
+            var book = await _bookService.GetBookByIdForMemberAsync(id);
+
+            if (book.Status)
+            {
+                return View(book);
+            }
+
+            ViewBag.Message = book.Message;
+            return View(book);
+        }
+
+
+        [Authorize(Roles = "Librarian")]
+        [HttpGet]
+        public async Task<IActionResult> BookDetailsForLibrarian(Guid id)
+        {
+            var name = User?.FindFirst(ClaimTypes.Name)?.Value;
+            var startName = name?.Substring(0, 1).ToUpper();
+            Console.WriteLine("NAME: " + startName);
+            ViewBag.NameAvatar = startName;
+
+            var book = await _bookService.GetBookByIdForLibrarianAsync(id);
+
+            if (book.Status)
+            {
+                return View(book);
+            }
+
+            ViewBag.Message = book.Message;
+            return View(book);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> AddBook()

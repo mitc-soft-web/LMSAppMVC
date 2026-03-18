@@ -10,6 +10,17 @@
     #preloader {
         display: none !important;
     }
+
+
+    .book-link {
+        transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
+    }
+
+        .book-link:hover {
+            color: #007bff !important; /* Modern primary blue */
+            text-decoration: underline !important;
+            cursor: pointer;
+        }
 </style>
 
 
@@ -305,7 +316,14 @@
                                                 <!-- Row 1 -->
                                                 <tr>
                                                     <td><input type="checkbox" class="custom-checkbox row-checkbox"></td>
-                                                    <td>@book.Title</td>
+                                                    <td>
+                                                        <a asp-controller="Book"
+                                                           asp-action="BookDetailsForLibrarian"
+                                                           asp-route-id="@book.Id"
+                                                           class="text-decoration-none fw-bold text-dark book-link">
+                                                            @book.Title
+                                                        </a>
+                                                    </td>
                                                     <td>@book.Author</td>
                                                     <td>@book.Category</td>
                                                     <td>@book.PublishedYear</td>

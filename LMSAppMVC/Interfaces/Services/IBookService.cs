@@ -9,5 +9,8 @@ namespace LMSAppMVC.Interfaces.Services
         public Task<BaseResponse<bool>> AddBookAsync(AddBookRequestModel request);
         public Task<BaseResponse<IReadOnlyList<ListOfBookResponseDto>>> GetAllBooksAsync();
         public Task<BaseResponse<IReadOnlyList<ListOfBookResponseDto>>> GetAllAvailableBooksAsync();
+        public Task<BaseResponse<BookDetailsResponseForMember>> GetBookByIdForMemberAsync(Guid id);
+        public Task<BaseResponse<BookDto>> GetBookByIdForLibrarianAsync(Guid id);
     }
 }
+

@@ -161,11 +161,11 @@ namespace LMSAppMVC.Controllers
                     new Claim(ClaimTypes.Name, loginResponse.Data.FullName),
                     new Claim(ClaimTypes.Email, loginResponse.Data.Email),
                     new Claim(ClaimTypes.NameIdentifier, loginResponse.Data.UserId.ToString()),
-                     new Claim(ClaimTypes.Role, loginResponse.Data.Role),
+                    new Claim(ClaimTypes.Role, loginResponse.Data.Role),
+                    new Claim("MemberId", loginResponse.Data.MemberId.ToString()),
+                    new Claim("LibrarianId", loginResponse.Data.LibrarianId.ToString())
 
                 };
-
-
                 checkRole = loginResponse.Data.Role;
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

@@ -1,15 +1,17 @@
 ﻿@using LMSAppMVC.Models.DTOs
 @using LMSAppMVC.Models.DTOs.Book
-@model BaseResponse<IReadOnlyList<ListOfBookResponseDto>>
+@using LMSAppMVC.Models.Entities
+@model BaseResponse<IReadOnlyList<LMSAppMVC.Models.DTOs.Loan.PendingLoansResponse>>
 
 @{
-    Layout = "_MemberLayout";
+    Layout = "_LibrarianLayout";
 }
 
 <style>
     #preloader {
         display: none !important;
     }
+
 
     .book-link {
         transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
@@ -20,7 +22,6 @@
             text-decoration: underline !important;
             cursor: pointer;
         }
-
 </style>
 
 
@@ -46,6 +47,32 @@
         <div class="spinner"></div>
     </div>
     <!-- Main Wrapper -->
+    @if (ViewBag.Message != null)
+    {
+        @* Removed position:fixed so it is responsive and visible inside the card *@
+        <div id="auto-close-alert" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            @ViewBag.Message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <script>
+            setTimeout(function() {
+                var alertElem = document.getElementById('auto-close-alert');
+                if (alertElem) {
+                    var bsAlert = new bootstrap.Alert(alertElem);
+                    bsAlert.close();
+                }
+            }, 5000);
+        </script>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
     <div id="main-wrapper"
          class="d-flex">
         @* <div class="sidebar">
@@ -270,25 +297,6 @@
                             <div class="flex-grow-1">
                                 <h3 class="mb-2 text-size-26 text-color-2">Book</h3>
                             </div>
-                            <div class="mt-3 mt-lg-0">
-                                <div class="d-flex align-items-center">
-                                    <!-- Date Range Button -->
-                                    <div class="cursor-pointer bg-white d-flex align-items-center text-color-1 px-3 py-2 rounded-2 text-normal fw-bolder letter-spacing-26 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa-solid fa-filter me-3"></i>
-                                        Filter by
-                                        <i class="fa-solid fa-chevron-right ms-3 text-size-sm"></i>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Active</a></li>
-                                            <li><a class="dropdown-item" href="#">Inactive</a></li>
-                                        </ul>
-                                    </div>
-                                    <!-- Reports Button -->
-                                    <a asp-action="AddBook" asp-controller="Book" class="cursor-pointer ms-4 bg-white bg-primary text-white d-flex align-items-center px-3 py-2 rounded-2 text-normal fw-bolder letter-spacing-26">
-                                        <i class="fa-solid fa-plus me-3"></i>
-                                        Add Book
-                                    </a>
-                                </div>
-                            </div>
                         </div><!-- end card header -->
                     </div>
                     <!--end col-->
@@ -298,45 +306,68 @@
                         <div class="card-body p-0">
                             @if (Model.Data != null && Model.Data.Any())
                             {
-                                @foreach (var availbleBook in Model.Data)
+                                @foreach (var pendingLoan in Model.Data)
                                 {
                                     <div class="table-responsive table-rounded-top">
                                         <table class="table align-middle">
                                             <thead>
                                                 <tr>
                                                     <th><input type="checkbox" id="select-all" class="custom-checkbox"></th>
-                                                    <th>Title</th>
+                                                    <th>Book Title</th>
                                                     <th>Author</th>
                                                     <th>Category</th>
-                                                    <th>Published Year</th>
+                                                    <th>Borrower</th>
+                                                    <th>Date Initiated</th>
+                                                    <th>Return Date</th>
                                                     <th class="text-center"><i class="fas fa-ellipsis-h"></i></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <!-- Row 1 -->
-                                                <tr class="text-center">
+                                                <tr>
                                                     <td><input type="checkbox" class="custom-checkbox row-checkbox"></td>
                                                     <td>
-                                                        <a asp-controller="Book"
-                                                           asp-action="BookDetailsForMember"
-                                                           asp-route-id="@availbleBook.Id"
+                                                        <a asp-controller="Loan"
+                                                           asp-action="LoanDetails"
+                                                           asp-route-loanId="@pendingLoan.Id"
                                                            class="text-decoration-none fw-bold text-dark book-link">
-                                                            @availbleBook.Title
+                                                            @pendingLoan.BookTitle
                                                         </a>
                                                     </td>
-
-                                                    <td>@availbleBook.Author</td>
-                                                    <td>@availbleBook.Category</td>
-                                                    <td>@availbleBook.PublishedYear</td>
+                                                    <td>@pendingLoan.Author</td>
+                                                    <td>@pendingLoan.CategoryName</td>
+                                                    <td>@pendingLoan.Borrower</td>
+                                                    <td>@pendingLoan.DateInitiated</td>
+                                                    <td>@pendingLoan.ReturnDate</td>
                                                     @* <td><span class="badge bg-success">Active</span></td> *@
                                                     <td class="text-center">
-                                                        <a href="#" data-bs-toggle="modal" data-bs-target="#EditModal" class="btn btn-sm btn-primary mb-2"><i class="fa-regular fa-pen-to-square"></i></a>
+                                                        @* <a asp-controller="Loan" asp-action="Approve" asp-route-loanId="@pendingLoan.Id"  class="btn btn-sm btn-primary mb-2"><i class="fa-regular fa-pen-to-square"></i> Approve</a> *@
                                                         <a href="#" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-can"></i></a>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
+                                    <div class="loan-action">
+                                        @if (pendingLoan.Status == LMSAppMVC.Contracts.Enums.LoanStatus.Pending)
+                                        {
+                                            <a asp-action="Approve" asp-controller="Loan" asp-route-loanId="@pendingLoan.Id" class="btn btn-sm bg-success-light">
+                                                <i class=""></i> Approve
+                                            </a>
+                                            <a asp-action="Reject" asp-controller="Loan" asp-route-loanId="@pendingLoan.Id" class="btn btn-sm bg-success-light">
+                                                <i class=""></i> Reject
+                                            </a>
+                                        }
+                                        else if (pendingLoan.Status == LMSAppMVC.Contracts.Enums.LoanStatus.Approved)
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else if (pendingLoan.Status == LMSAppMVC.Contracts.Enums.LoanStatus.Rejected)
+                                        {
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        }
+                                     </div>
+
                                 }
                             }
                             else
@@ -504,5 +535,6 @@
     <script src="~/lms-assets/plugin/quill/quill.js"></script>
     <script src="~/lms-assets/js/chart.js"></script>
     <script src="~/lms-assets/js/main.js"></script>
+
 </body>
 </html>

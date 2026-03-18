@@ -296,7 +296,7 @@ namespace LMSAppMVC.Implementation.Services
                     {
 
                         UserId = user.Id,
-                        MembershipNo = user?.Member?.MembershipNumber,
+                        MemberId = user.Member != null ? user.Member.Id : Guid.Empty,
                         Email = user != null ? user.Email : "",
                         Role = role,
                         FullName = user?.Member != null ? $"{user.Member?.FullName}" : string.Empty
@@ -316,6 +316,7 @@ namespace LMSAppMVC.Implementation.Services
                     Email = user.Email,
                     Role = role,
                     FullName = user.Librarian != null ? $"{user.Librarian?.FullName}" : string.Empty,
+                    LibrarianId = user.Librarian != null ? user.Librarian.Id : Guid.Empty,
 
 
                 }
@@ -326,7 +327,7 @@ namespace LMSAppMVC.Implementation.Services
 
         private string GenerateMembershipNumber()
         {
-            return $"Mem-{Guid.NewGuid().ToString().Substring(0, 5).Replace("-", "").ToUpper()}";
+            return $"MEM-{Guid.NewGuid().ToString().Substring(0, 5).Replace("-", "").ToUpper()}";
         }
             
     }

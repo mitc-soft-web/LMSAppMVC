@@ -1,0 +1,63 @@
+﻿@using LMSAppMVC.Models.DTOs
+@model BaseResponse<LMSAppMVC.Models.DTOs.Book.BookDetailsResponseForMember>
+
+@{
+    Layout = null;
+}
+
+
+<style>
+    body {
+        background-image: url('/images/library-bg.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    .overlay {
+        background: rgba(0,0,0,0.6);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .glass-card {
+        max-width: 600px;
+        width: 100%;
+        border-radius: 18px;
+        backdrop-filter: blur(12px);
+        background: rgba(255,255,255,0.08);
+        color: #fff;
+    }
+
+    .book-icon {
+        font-size: 60px;
+        color: #ffc107;
+    }
+</style>
+
+<div class="overlay">
+
+    <div class="card shadow-lg border-0 glass-card p-4 text-center">
+
+        <i class="bi bi-book-half book-icon"></i>
+
+        <h3 class="fw-bold mt-3">@Model.Data.Title</h3>
+
+        <p class="text-light mb-1"><strong>Author:</strong> @Model.Data.Author</p>
+        <p class="text-light mb-1"><strong>Category:</strong> @Model.Data.Category</p>
+        <p class="text-light mb-3"><strong>Published:</strong> @Model.Data.PublishedYear</p>
+        <p class="text-light mb-3"><strong>ISBN:</strong> @Model.Data.ISBN</p>
+        <a asp-controller="Loan"
+           asp-action="InitiateBookLoan"
+           asp-route-bookId="@Model.Data.Id"
+           style="color:blanchedalmond"
+           class="btn btn-warning w-100 fw-bold">
+            Loan This Book
+        </a>
+
+    </div>
+
+</div>

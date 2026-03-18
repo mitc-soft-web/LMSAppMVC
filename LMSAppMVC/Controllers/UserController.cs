@@ -14,8 +14,10 @@ namespace LMSAppMVC.Controllers
         {
             var name = User?.FindFirst(ClaimTypes.Name)?.Value;
             var startName = name?.Substring(0, 1).ToUpper();
-            Console.WriteLine("NAME: "+ startName);
             ViewBag.NameAvatar = startName;
+
+            var librarianIdString = User?.FindFirst("LibrarianId")?.Value;
+
             return View();
         }
 
@@ -23,7 +25,6 @@ namespace LMSAppMVC.Controllers
         {
             var name = User?.FindFirst(ClaimTypes.Name)?.Value;
             var startName = name?.Substring(0, 1).ToUpper();
-            Console.WriteLine("NAME: " + startName);
             ViewBag.NameAvatar = startName;
             return View();
         }

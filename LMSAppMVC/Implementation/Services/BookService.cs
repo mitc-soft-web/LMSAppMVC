@@ -97,7 +97,8 @@ namespace LMSAppMVC.Implementation.Services
                 Message = $"{availableBooks.Count()} books retrieved successfully",
                 Status = true,
                 Data = availableBooks.Select(book => new ListOfBookResponseDto
-                {
+                { 
+                    Id = book.Id,
                     Title = book.Title,
                     PublishedYear = book.PublishedYear,
                     Author = book.Author != null ? book.Author.FullName : "",
@@ -125,12 +126,72 @@ namespace LMSAppMVC.Implementation.Services
                 Status = true,
                 Data = books.Select(book => new ListOfBookResponseDto
                 {
+                    Id = book.Id,
                     Title = book.Title,
                     PublishedYear = book.PublishedYear,
                     Author = book.Author != null ? book.Author.FullName : "",
                     Category = book.Category != null ? book.Category.Name : ""
 
                 }).ToList()
+            };
+        }
+
+        public async Task<BaseResponse<BookDto>> GetBookByIdForLibrarianAsync(Guid id)
+        {
+            var book = await _bookRepository.GetBookDetails(id);
+            if (book is null)
+            {
+                return new BaseResponse<BookDto>
+                {
+                    Message = "Book cannot be found",
+                    Status = false
+                };
+            }
+
+            return new BaseResponse<BookDto>
+            {
+                Message = $"Book with title '{book.Title}' retrieved successfully",
+                Status = true,
+                Data = new BookDto
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Author = book.Author != null ? book.Author.FullName : "",
+                    Category = book.Category != null ? book.Category.Name : "",
+                    ISBN = book.ISBN,
+                    PublishedYear = book.PublishedYear,
+                    AvailableCopies = book.AvailableCopies,
+                    TotalCopies = book.TotalCopies,
+                    DateAdded = book.DateCreated
+                }
+            };
+        }
+
+        public async Task<BaseResponse<BookDetailsResponseForMember>> GetBookByIdForMemberAsync(Guid id)
+        {
+            var book = await _bookRepository.GetBookDetails(id);
+            if(book is null)
+            {
+                return new BaseResponse<BookDetailsResponseForMember>
+                {
+                    Message = "Book cannot be found",
+                    Status = false
+                };
+            }
+
+            return new BaseResponse<BookDetailsResponseForMember>
+            {
+                Message = $"Book with title '{book.Title}' retrieved successfully",
+                Status = true,
+                Data = new BookDetailsResponseForMember
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Author = book.Author != null ? book.Author.FullName : "",
+                    Category = book.Category != null ? book.Category.Name : "",
+                    ISBN = book.ISBN,
+                    PublishedYear = book.PublishedYear,
+                }
             };
         }
     }

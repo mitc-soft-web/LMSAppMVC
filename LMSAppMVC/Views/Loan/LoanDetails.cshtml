@@ -1,0 +1,59 @@
+﻿@using LMSAppMVC.Models.DTOs
+@model BaseResponse<LMSAppMVC.Models.DTOs.Loan.PendingLoansResponse>
+
+
+@{
+    Layout = "_LibrarianLayout";
+}
+
+
+<h1>Details</h1>
+
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">@Model.Data.BookTitle</h4>
+        <small>Return Initiated: @Model.Data.ReturnDate.ToString("f")</small>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <h6>Author</h6>
+                <p>@Html.DisplayFor(l => l.Data.Author)</p>
+            </div>
+
+            <div class="col-md-6">
+                <h6>category</h6>
+                <p>@Html.DisplayFor(l => l.Data.CategoryName)</p>
+            </div>
+            <div class="col-md-6">
+                <h6>Borrower</h6>
+                <p>@Html.DisplayFor(l => l.Data.Borrower)</p>
+                <small>Return Date: @Model.Data.ReturnDate.ToString("f")</small>
+            </div>
+        </div>
+
+        <hr />
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-6">
+                <b>Loan Status:</b>
+                <span class="badge @(Model.Data.Status == LMSAppMVC.Contracts.Enums.LoanStatus.Pending ? "bg-warning" :
+                                                                                Model.Data.Status == LMSAppMVC.Contracts.Enums.LoanStatus.Approved ? "bg-success" :
+                                                                                "bg-danger")">
+                    @Model.Data.Status
+                </span>
+            </div>
+            <div class="col-md-6 text-end">
+                <b>Date Initiated:</b> @Model.Data.DateInitiated.ToString("f")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+
+    <a asp-action="PendingLoans" asp-controller="Loan">Back to List</a>
+</div>

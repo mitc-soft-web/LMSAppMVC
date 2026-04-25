@@ -6,6 +6,12 @@ namespace LMSAppMVC.LMSDbContext
 {
     public class LMSContext(DbContextOptions<LMSContext> options) : DbContext(options)
     {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.ConfigureWarnings(w =>
+                w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -52,7 +58,7 @@ namespace LMSAppMVC.LMSDbContext
                 Id = adminRoleId,
                 Name = "Admin",
                 Description = "Has full access",
-                DateCreated = DateTime.SpecifyKind(new DateTime(2026, 03, 12), DateTimeKind.Utc),
+                DateCreated = new DateTime(2026, 04, 25, 0, 0, 0, DateTimeKind.Utc),
             };
 
             //var hasher = new PasswordHasher<object>();
@@ -63,7 +69,7 @@ namespace LMSAppMVC.LMSDbContext
                 Id = adminUserId,
                 HashPassword = "AQAAAAIAAYagAAAAEM32vE7BpeyLOD9b4Zhg6UUlfA10yv/AQe4zgdtti3inkkSehi+ZMjQbEBD+b19jIQ==",
                 RoleId = adminRoleId,
-                DateCreated = DateTime.SpecifyKind(new DateTime(2026, 03, 12), DateTimeKind.Utc),
+                DateCreated = new DateTime(2026, 04, 25, 0, 0, 0, DateTimeKind.Utc),
             };
 
             var admin = new Librarian
@@ -87,14 +93,14 @@ namespace LMSAppMVC.LMSDbContext
                     Id = new Guid("a45c9e02-1f0b-4e57-b3d8-9b77b4a302be"),
                     Name = "Member",
                     Description = "Members of the Library",
-                    DateCreated = DateTime.SpecifyKind(new DateTime(2026, 03, 12), DateTimeKind.Utc),
+                    DateCreated = new DateTime(2026, 04, 25, 0, 0, 0, DateTimeKind.Utc),
                 },
                 new Role
                 {
                     Id = new Guid("6e3d4978-dcb0-42ea-9c48-7f6209d4a871"),
                     Name = "Librarian",
                     Description = "Manages Library",
-                    DateCreated = DateTime.SpecifyKind(new DateTime(2026, 03, 12), DateTimeKind.Utc),
+                    DateCreated = new DateTime(2026, 04, 25, 0, 0, 0, DateTimeKind.Utc),
                 },
 
 

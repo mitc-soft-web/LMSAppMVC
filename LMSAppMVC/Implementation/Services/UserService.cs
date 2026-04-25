@@ -6,8 +6,10 @@ using LMSAppMVC.Interfaces.Services.IDS;
 using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Auth;
 using LMSAppMVC.Models.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
 using System.Security.Principal;
 
@@ -265,7 +267,7 @@ namespace LMSAppMVC.Implementation.Services
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
             if (!isPasswordValid)
             {
-                await _idsService.RegisterFailedAttemptAsync(ip);
+                await _idsService.RegisterFailedAttemptAsync(ip!);
                 _logger.LogError("Invalid credentials");
                 return new BaseResponse<LoginResponseModel>
                 {

@@ -5,6 +5,7 @@ using LMSAppMVC.Exceptions.Messaging;
 using LMSAppMVC.Exceptions.TemplateEngine;
 using LMSAppMVC.Interfaces.TemplateEngine;
 using LMSAppMVC.Messaging.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace LMSAppMVC.Implementation.MailingService

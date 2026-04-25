@@ -4,6 +4,7 @@ using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Loan;
 using LMSAppMVC.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LMSAppMVC.Implementation.Services
 {

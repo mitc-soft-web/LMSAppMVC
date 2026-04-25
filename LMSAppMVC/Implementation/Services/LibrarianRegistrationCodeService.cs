@@ -4,6 +4,7 @@ using LMSAppMVC.Interfaces.Services;
 using LMSAppMVC.Models.DTOs;
 using LMSAppMVC.Models.DTOs.Auth;
 using LMSAppMVC.Models.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace LMSAppMVC.Implementation.Services
 {

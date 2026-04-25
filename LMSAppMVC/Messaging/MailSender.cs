@@ -3,6 +3,9 @@ using brevo_csharp.Model;
 using LMSAppMVC.Contracts.Messaging;
 using LMSAppMVC.Exceptions.Messaging;
 using LMSAppMVC.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace LMSAppMVC.Messaging
 {
@@ -12,7 +15,7 @@ namespace LMSAppMVC.Messaging
         private readonly IConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         private readonly ILogger<IMailSender> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         private readonly IWebHostEnvironment _env = env ?? throw new ArgumentNullException(nameof(_env));
-        public async Task<bool> Send(string from, string fromName, string to, string toName, string subject, string message, IDictionary<string, Stream> attachments = null)
+        public async Task<bool> Send(string from, string fromName, string to, string toName, string subject, string message, IDictionary<string, Stream> attachments = null!)
         {
             var smtpApiKey = _configuration["LMSApis:BrevoApiKey"];
 

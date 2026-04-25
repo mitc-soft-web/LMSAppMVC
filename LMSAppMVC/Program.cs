@@ -102,26 +102,26 @@ app.MapControllerRoute(
     pattern: "{controller=Auth}/{action=Login}/{id?}")
     .WithStaticAssets();
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    try
-//    {
-//        var db = services.GetRequiredService<LMSContext>();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var db = services.GetRequiredService<LMSContext>();
 
-//        var connection = db.Database.GetDbConnection();
-//        Console.WriteLine($"[DB MIGRATION] Attempting to migrate database on host: {connection.DataSource}");
+        var connection = db.Database.GetDbConnection();
+        Console.WriteLine($"[DB MIGRATION] Attempting to migrate database on host: {connection.DataSource}");
 
-//        db.Database.Migrate();
-//        Console.WriteLine("[DB MIGRATION] Success: Database is up to date.");
-//    }
-//    catch (Exception ex)
-//    {
-//        var logger = services.GetRequiredService<ILogger<Program>>();
-//        logger.LogError(ex.Message + "An error occurred while migrating the database. Ensure the ConnectionString is correct.");
-//        throw;
-//    }
-//}
+        db.Database.Migrate();
+        Console.WriteLine("[DB MIGRATION] Success: Database is up to date.");
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex.Message + "An error occurred while migrating the database. Ensure the ConnectionString is correct.");
+        throw;
+    }
+}
 
 
 

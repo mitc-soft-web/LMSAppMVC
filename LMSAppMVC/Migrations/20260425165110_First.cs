@@ -248,7 +248,7 @@ namespace LMSAppMVC.Migrations
             migrationBuilder.InsertData(
                 table: "Librarians",
                 columns: new[] { "Id", "DateCreated", "DateModified", "FullName", "LibrarianRegistrationCode", "UserId" },
-                values: new object[] { new Guid("a65c9e02-1f0b-4e57-b3d8-7b77b4a302be"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LMS Admin", "8A052", new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52") });
+                values: new object[] { new Guid("a65c9e02-1f0b-4e57-b3d8-7b77b4a302be"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LMS Admin", "77D4B", new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_AuthorId",

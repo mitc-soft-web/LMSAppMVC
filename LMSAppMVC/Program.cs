@@ -60,7 +60,7 @@ builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection(
 
 // Add Database
 builder.Services.AddDbContext<LMSContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("LMSContext")
+    options.UseNpgsql(builder.Configuration.GetConnectionString("LmsConnection")
     ));
 
 

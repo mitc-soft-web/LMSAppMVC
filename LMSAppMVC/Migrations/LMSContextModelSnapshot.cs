@@ -193,7 +193,7 @@ namespace LMSAppMVC.Migrations
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             FullName = "LMS Admin",
-                            LibrarianRegistrationCode = "8A052",
+                            LibrarianRegistrationCode = "77D4B",
                             UserId = new Guid("c8f2e5ab-9f34-4b97-8b7c-1a5e86c77e52")
                         });
                 });

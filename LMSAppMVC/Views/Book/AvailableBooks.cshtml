@@ -283,12 +283,7 @@
                                         </ul>
                                     </div>
                                     <!-- Reports Button -->
-                                    @* @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Librarian")
-                                    {
-                                        
-                                    } *@
-
-                                    @if (User.IsInRole("Librarian"))
+                                    @if(User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Librarian")
                                     {
                                         <a asp-action="AddBook" asp-controller="Book" class="cursor-pointer ms-4 bg-white bg-primary text-white d-flex align-items-center px-3 py-2 rounded-2 text-normal fw-bolder letter-spacing-26">
                                             <i class="fa-solid fa-plus me-3"></i>

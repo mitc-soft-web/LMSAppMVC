@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: lms
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+
+    # Link environment variable to your Render database
+    envVars:
+      - key: ConnectionStrings__LmsConnection
+        fromDatabase:
+          name: lms-db 
+          property: connectionString
+
+# Define the PostgreSQL database
+databases:
+  - name: lms-db
+    databaseName: lms_db_5fg5
+    user: lms_db_5fg5_user
+    plan: free
+    region: oregon
+
